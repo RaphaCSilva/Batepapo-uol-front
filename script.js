@@ -17,6 +17,8 @@ let container = document.querySelector(".container");
 container.innerHTML = "";
 let message = {};
 let messagetext = "";
+let privado = {};
+let privadotext = "";
 
 function pegarmensagens(){
   container.innerHTML ="";
@@ -29,31 +31,47 @@ function postarmsg(msg) {
       if(msg.data[i].type === "status"){
         statusmsg = msg.data[i];
         poststatus();
-      }else{
+      }
+      if(msg.data[i].type === "message"){
           message = msg.data[i];
           postmessage();
       }
+      if(msg.data[i].type === "private_message"){
+          if(msg.data[i].to === nome || msg.data[i].from === nome){
+          privado = msg.data[i];
+          postprivado();
+          }
+      }
     }
 }
-//setInterval(pegarmensagens, 3000);
 pegarmensagens();
+setInterval(pegarmensagens, 3000);
 
 function poststatus(){
     statustext = `<div class="statushtml">
-    (${statusmsg.time}) ${statusmsg.from} ${statusmsg.text}
+    <h3>(${statusmsg.time})</h3> <h1>${statusmsg.from}</h1> <h2>${statusmsg.text}</h2>
     </div>`;
     container.innerHTML += statustext;
     const statusaparece = document.querySelector('.statushtml');
     statusaparece.scrollIntoView();
 }
+
 function postmessage(){
     messagetext = `<div class="everyone">
-    (${message.time}) ${message.from} para ${message.to}: ${message.text}
+    <h3>(${message.time})  </h3> <h1> ${message.from} </h1> <h2> para </h2> <h1>${message.to}</h1><h2>: ${message.text}</h2>
     </div>`;
     container.innerHTML += messagetext;
     const messageaparece = document.querySelector('.everyone');
     messageaparece.scrollIntoView();
 }
+
+function postprivado(){
+    messagetext = `<div class="private">
+    <h3>(${message.time})</h3> <h1>${message.from}</h1> <h2> para </h2> <h1>${message.to}</h1><h2>: ${message.text}</h2>
+    </div>`;
+    container.innerHTML += messagetext;
+}
+
 let enviar = {};
 let inputtext = "";
 
@@ -65,22 +83,6 @@ function salvarmensagem(){
       text: inputtext,
       type: "message"
     }
-    sendmessage();
+    axios.post("https://mock-api.driven.com.br/api/v6/uol/messages", enviar);
     document.querySelector(".input").value = "";
 }
-function sendmessage(){
-    axios.post("https://mock-api.driven.com.br/api/v6/uol/messages", enviar);
-}
-//{
-//	from: "nome do usuário",
-//	to: "nome do destinatário (Todos se não for um específico)",
-//	text: "mensagem digitada",
-//	type: "message" // ou "private_message" para o bônus
-//}
-
-
-//from: "João",
-//to: "Todos",
-//text: "Bom dia",
-//type: "message", "status"
-//time: "08:02:50"
