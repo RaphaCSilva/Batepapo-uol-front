@@ -1,13 +1,25 @@
 let nome = "";
-nome = prompt("manda teu nome parceiro");
+nome = prompt("Insira o seu nome por favor");
 
-const nomeobject = {
+let nomeobject = {
     name: nome
 }
 const promise = axios.post("https://mock-api.driven.com.br/api/v6/uol/participants",nomeobject);
+promise.catch(tratarErro);
+
+function tratarErro(erro) {
+  if(erro.response.status === 400){
+    nome = prompt("Este nome ja esta em uso ou é invalido, tente outro por favor");
+    nomeobject = {
+      name: nome
+    }
+    const promise = axios.post("https://mock-api.driven.com.br/api/v6/uol/participants",nomeobject);
+    promise.catch(tratarErro);
+  }
+}
 
 function verifica(){
-    axios.post("https://mock-api.driven.com.br/api/v6/uol/status", nomeobject);
+   axios.post("https://mock-api.driven.com.br/api/v6/uol/status", nomeobject);
 }
 setInterval(verifica, 5000);
 
@@ -123,7 +135,15 @@ function salvarmensagem(){
       text: inputtext,
       type: "message"
     }
-    axios.post("https://mock-api.driven.com.br/api/v6/uol/messages", enviar);
+    let send = axios.post("https://mock-api.driven.com.br/api/v6/uol/messages", enviar);
+    send.catch(semNome);
     pegarmensagens();
     document.querySelector(".input").value = "";
+}
+
+function semNome(erro){
+  if(erro.response.status === 400){
+    alert("Opa parece que seu login expirou, vamos reiniciar para você");
+    window.location.reload();
+  }
 }
