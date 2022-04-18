@@ -81,6 +81,9 @@ header {
   .private h2:first-of-type {
     word-break: normal;
   }
+  .everyone h2:first-of-type {
+    word-break: normal;
+  }
   .entrada {
     width: 100%;
     height: 80px;
