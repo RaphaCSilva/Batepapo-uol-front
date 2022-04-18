@@ -104,7 +104,7 @@ function poststatus(){
 
 function postmessage(){
     messagetext = `<div class="everyone">
-    <h3>(${message.time})  </h3> <h1> ${message.from} </h1> <h2> para </h2> <h1>${message.to}</h1><h2>: ${message.text}</h2>
+    <h3>(${message.time})  </h3> <h1> ${message.from} </h1> <h2> para </h2> <h1>${message.to}:</h1><h2> ${message.text}</h2>
     </div>`;
     container.innerHTML += messagetext;
     autoscroll();
@@ -112,7 +112,7 @@ function postmessage(){
 
 function postprivado(){
     privadotext = `<div class="private">
-    <h3>(${privado.time})</h3> <h1>${privado.from}</h1> <h2> reservadamente para </h2> <h1>${privado.to}</h1><h2>: ${privado.text}</h2>
+    <h3>(${privado.time})</h3> <h1>${privado.from}</h1> <h2> reservadamente para </h2> <h1>${privado.to}:</h1><h2> ${privado.text}</h2>
     </div>`;
     container.innerHTML += privadotext;
     autoscroll();
