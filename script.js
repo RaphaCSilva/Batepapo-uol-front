@@ -25,6 +25,7 @@ function pegarmensagens(){
   let promessa = axios.get('https://mock-api.driven.com.br/api/v6/uol/messages');
   promessa.then(postarmsg);
 }
+
 let checaprimeira = 0;
 let start = 0;
 
@@ -65,7 +66,7 @@ function postarmsg(msg) {
               postmessage();
             }
             if(msg.data[i].type === "private_message"){
-                if(msg.data[i].to === nome || msg.data[i].from === nome){
+                if(msg.data[i].to === nome || msg.data[i].from === nome || msg.data[i].to === "Todos"){
                     privado = msg.data[i];
                     historico.push(msg.data[i]);
                     postprivado();
@@ -86,6 +87,7 @@ function poststatus(){
     <h3>(${statusmsg.time})</h3> <h1>${statusmsg.from}</h1> <h2>${statusmsg.text}</h2>
     </div>`;
     container.innerHTML += statustext;
+    autoscroll();
 }
 
 function postmessage(){
@@ -93,13 +95,21 @@ function postmessage(){
     <h3>(${message.time})  </h3> <h1> ${message.from} </h1> <h2> para </h2> <h1>${message.to}</h1><h2>: ${message.text}</h2>
     </div>`;
     container.innerHTML += messagetext;
+    autoscroll();
 }
 
 function postprivado(){
-    messagetext = `<div class="private">
-    <h3>(${message.time})</h3> <h1>${message.from}</h1> <h2> para </h2> <h1>${message.to}</h1><h2>: ${message.text}</h2>
+    privadotext = `<div class="private">
+    <h3>(${privado.time})</h3> <h1>${privado.from}</h1> <h2> reservadamente para </h2> <h1>${privado.to}</h1><h2>: ${privado.text}</h2>
     </div>`;
-    container.innerHTML += messagetext;
+    container.innerHTML += privadotext;
+    autoscroll();
+}
+
+let ultimo;
+function autoscroll(){
+  ultimo = container.lastChild;
+  ultimo.scrollIntoView();
 }
 
 let enviar = {};
@@ -114,5 +124,6 @@ function salvarmensagem(){
       type: "message"
     }
     axios.post("https://mock-api.driven.com.br/api/v6/uol/messages", enviar);
+    pegarmensagens();
     document.querySelector(".input").value = "";
 }
